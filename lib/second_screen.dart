@@ -1,5 +1,24 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
+import 'widgets/activity_dialog.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const SecondScreen(),
+    );
+  }
+}
 
 class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
@@ -17,6 +36,15 @@ class _SecondScreenState extends State<SecondScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Second Screen'),
+        automaticallyImplyLeading: false, // Remove the go back button
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              Navigator.pop(context); // Navigate back to previous screen
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Stack(
@@ -32,7 +60,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             Text(
               _reached.toStringAsFixed(0),
-              style: TextStyle(fontSize: 30),
+              style: const TextStyle(fontSize: 30),
             ),
           ],
         ),
@@ -44,21 +72,23 @@ class _SecondScreenState extends State<SecondScreen> {
           borderRadius: BorderRadius.circular(8.0),
         ),
         onPressed: () {
-          setState(() {
-            Navigator.pushNamed(context, '/third');
-            //_reached += 1;
-          });
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return ActivityDialog();
+            },
+          );
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.logout),
-            label: 'Log out',
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.map),
-            label: 'My routes',
+            label: 'Mis rutas',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
@@ -68,7 +98,10 @@ class _SecondScreenState extends State<SecondScreen> {
         selectedItemColor: Colors.blue,
         onTap: (int index) {
           if (index == 0) {
-            Navigator.pop(context); // Navigate back to previous screen
+            // Handle home button tap
+          } else if (index == 1) {
+            Navigator.pushNamed(
+                context, '/third'); // Navigate to the third screen
           } else {
             // Handle other button taps
           }
