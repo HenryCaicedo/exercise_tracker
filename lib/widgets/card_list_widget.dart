@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:exercise_tracker/route_screen.dart';
 
 class CardListWidget extends StatefulWidget {
   @override
@@ -36,6 +37,36 @@ class _CardListWidgetState extends State<CardListWidget> {
           RouteData data = _list[index];
           return Card(
             child: ListTile(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (_, __, ___) => RouteScreen(),
+                    transitionDuration: Duration(milliseconds: 300),
+                    transitionsBuilder: (_, animation, __, child) {
+                      return SlideTransition(
+                        position: Tween<Offset>(
+                          begin: Offset(1.0, 0.0),
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: child,
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
               title: Text(
                 '${data.startDate} ${data.startTime}',
                 style: TextStyle(fontSize: 18.0),
@@ -53,6 +84,7 @@ class _CardListWidgetState extends State<CardListWidget> {
                   ),
                 ],
               ),
+              trailing: Icon(Icons.arrow_forward),
             ),
           );
         },
