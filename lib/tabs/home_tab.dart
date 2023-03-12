@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/activity_dialog.dart';
+import '../widgets/activity_dialog.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,19 +15,19 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SecondScreen(),
+      home: const HomeTab(),
     );
   }
 }
 
-class SecondScreen extends StatefulWidget {
-  const SecondScreen({Key? key}) : super(key: key);
+class HomeTab extends StatefulWidget {
+  const HomeTab({Key? key}) : super(key: key);
 
   @override
-  _SecondScreenState createState() => _SecondScreenState();
+  _HomeTabState createState() => _HomeTabState();
 }
 
-class _SecondScreenState extends State<SecondScreen> {
+class _HomeTabState extends State<HomeTab> {
   double _goal = 123.0;
   double _reached = 10.0;
 
@@ -35,7 +35,7 @@ class _SecondScreenState extends State<SecondScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Second Screen'),
+        title: const Text('Home Tab'),
         automaticallyImplyLeading: false, // Remove the go back button
         actions: [
           IconButton(
@@ -78,33 +78,6 @@ class _SecondScreenState extends State<SecondScreen> {
               return ActivityDialog();
             },
           );
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Mis rutas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Segments',
-          ),
-        ],
-        selectedItemColor: Colors.blue,
-        onTap: (int index) {
-          if (index == 0) {
-            // Handle home button tap
-          } else if (index == 1) {
-            Navigator.pushNamed(
-                context, '/third'); // Navigate to the third screen
-          } else {
-            // Handle other button taps
-          }
         },
       ),
     );

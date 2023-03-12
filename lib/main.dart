@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'first_screen.dart';
-import 'second_screen.dart';
-import 'third_screen.dart';
+import 'login_screen.dart';
+import 'tab_widget.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,9 +14,8 @@ class MyApp extends StatelessWidget {
       title: 'Navigation Demo',
       initialRoute: '/',
       routes: {
-        '/': (context) => FirstScreen(),
-        '/second': (context) => SecondScreen(),
-        '/third': (context) => ThirdScreen(),
+        '/': (context) => LoginScreen(),
+        '/tabs': (context) => const TabWidget(),
       },
     );
   }

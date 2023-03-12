@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class FirstScreen extends StatelessWidget {
+class LoginScreen extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -76,7 +76,7 @@ class FirstScreen extends StatelessWidget {
                             _passwordController.text == '') {
                           _usernameController.clear();
                           _passwordController.clear();
-                          Navigator.pushNamed(context, '/second');
+                          Navigator.pushNamed(context, '/tabs');
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
