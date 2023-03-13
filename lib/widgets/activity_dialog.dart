@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../activity_screen.dart';
 
 class ActivityDialog extends StatelessWidget {
   final List<String> activityTypes = [
@@ -38,7 +39,9 @@ class ActivityDialog extends StatelessWidget {
           child: const Text('Cancelar'),
         ),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, '/activity');
+          },
           child: const Text('Iniciar'),
         ),
       ],
