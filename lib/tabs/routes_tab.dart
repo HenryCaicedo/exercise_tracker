@@ -7,10 +7,6 @@ class RoutesTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mis Rutas'),
-        automaticallyImplyLeading: false, // Remove the back button
-      ),
       body: CardListWidget(),
     );
   }

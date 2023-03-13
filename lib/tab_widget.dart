@@ -36,11 +36,31 @@ class _TabWidgetState extends State<TabWidget> {
     const SegmentsTab(),
   ];
 
+  final List<String> _titles = [
+    'Exercise Tracker',
+    'Actividades',
+    'Segmentos',
+  ];
+
   int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(_titles[_currentIndex]),
+        automaticallyImplyLeading: false,
+        actions: _currentIndex == 0
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.logout),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ]
+            : null,
+      ),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 180),
         transitionBuilder: (Widget child, Animation<double> animation) {
@@ -59,7 +79,7 @@ class _TabWidgetState extends State<TabWidget> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.map),
-            label: 'Mis rutas',
+            label: 'Actividades',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
