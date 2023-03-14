@@ -70,7 +70,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      child: const Text('Login'),
+                      child: const Text('Iniciar'),
                       onPressed: () {
                         if (_usernameController.text == '' &&
                             _passwordController.text == '') {
