@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'sign_up_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class SignUpScreen extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -17,7 +17,7 @@ class LoginScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Text(
-              'Exercise Tracker',
+              'Create Account',
               style: TextStyle(
                 fontFamily: 'Roboto',
                 fontWeight: FontWeight.bold,
@@ -38,7 +38,7 @@ class LoginScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text(
-                      'Login',
+                      'Sign Up',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -49,6 +49,18 @@ class LoginScreen extends StatelessWidget {
                       controller: _usernameController,
                       decoration: const InputDecoration(
                         labelText: 'Username',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(10.0),
@@ -71,11 +83,13 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      child: const Text('Iniciar'),
+                      child: const Text('Create'),
                       onPressed: () {
                         if (_usernameController.text == '' &&
+                            _emailController.text == '' &&
                             _passwordController.text == '') {
                           _usernameController.clear();
+                          _emailController.clear();
                           _passwordController.clear();
                           Navigator.pushNamed(context, '/tabs');
                         } else {
@@ -86,18 +100,6 @@ class LoginScreen extends StatelessWidget {
                             ),
                           );
                         }
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    TextButton(
-                      child: const Text('Crear cuenta'),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignUpScreen(),
-                          ),
-                        );
                       },
                     ),
                   ],
