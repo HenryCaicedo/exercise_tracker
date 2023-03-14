@@ -71,47 +71,73 @@ class _HomeTabState extends State<HomeTab> {
                       ),
                     ),
                     Positioned(
+                      top: 16.0,
+                      left: 16.0,
+                      right: 16.0,
+                      child: Text(
+                        'Meta semanal',
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Positioned(
                       bottom: 16.0,
-                      left: 16.0, // added padding
-                      right: 16.0, // added padding
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      left: 16.0,
+                      right: 16.0,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  //Aquí se pone la separación
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: ElevatedButton.icon(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ActivityScreen()),
-                                  );
-                                },
-                                icon: Icon(Icons.directions_bike),
-                                label: Text('Ciclismo'),
-                              ),
+                          Text(
+                            'Iniciar actividad',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  //Aquí se pone la separación
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: ElevatedButton.icon(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ActivityScreen()),
-                                  );
-                                },
-                                icon: Icon(Icons.directions_run),
-                                label: Text('Trote'),
+                          SizedBox(height: 16.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ActivityScreen()),
+                                      );
+                                    },
+                                    icon: Icon(Icons.directions_bike),
+                                    label: Text('Ciclismo'),
+                                  ),
+                                ),
                               ),
-                            ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ActivityScreen()),
+                                      );
+                                    },
+                                    icon: Icon(Icons.directions_run),
+                                    label: Text('Trote'),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

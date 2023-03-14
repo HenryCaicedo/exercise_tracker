@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class FifthScreen extends StatelessWidget {
+class NewSegmentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fifth screen'),
+        title: Text('New segment screen'),
       ),
       body: Center(
-        child: Text('This is the fifth screen.'),
+        child: Text('This is the new segment screen.'),
       ),
     );
   }

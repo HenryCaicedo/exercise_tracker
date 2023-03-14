@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/segment_list_widget.dart';
 
 class SegmentsTab extends StatelessWidget {
   const SegmentsTab({Key? key}) : super(key: key);
@@ -6,12 +7,7 @@ class SegmentsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text(
-          'Segments screen',
-          style: TextStyle(fontSize: 24),
-        ),
-      ),
+      body: SegmentListWidget(),
     );
   }
 }

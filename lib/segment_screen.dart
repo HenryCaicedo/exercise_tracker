@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'ranking_screen.dart';
 
-class RouteScreen extends StatelessWidget {
+class SegmentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,7 +12,7 @@ class RouteScreen extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: Text('Activity screen'),
+        title: Text('Date'),
         actions: [
           IconButton(
             icon: Icon(Icons.delete),
@@ -56,14 +57,19 @@ class RouteScreen extends StatelessWidget {
                   subtitle: Text('1.1 km'),
                 ),
                 ListTile(
-                  leading: Icon(Icons.access_time),
-                  title: Text('Duración total:'),
+                  leading: Icon(Icons.timer),
+                  title: Text('Mejor tiempo:'),
                   subtitle: Text('15 min'),
                 ),
-                ListTile(
-                  leading: Icon(Icons.timelapse),
-                  title: Text('Inicio-Fin:'),
-                  subtitle: Text('07:21 AM - 07:36 AM'),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  child: Text('Tabla de posiciones'),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RankingScreen()),
+                    );
+                  },
                 ),
               ],
             ),

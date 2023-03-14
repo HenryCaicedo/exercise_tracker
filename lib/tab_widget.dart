@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'tabs/home_tab.dart';
 import 'tabs/routes_tab.dart';
 import 'tabs/segments_tab.dart';
+import 'widgets/log_out_dialog_widget.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,7 +39,7 @@ class _TabWidgetState extends State<TabWidget> {
 
   final List<String> _titles = [
     'Exercise Tracker',
-    'Actividades',
+    'Historial de actividades',
     'Segmentos',
   ];
 
@@ -54,8 +55,14 @@ class _TabWidgetState extends State<TabWidget> {
             ? [
                 IconButton(
                   icon: const Icon(Icons.logout),
-                  onPressed: () {
-                    Navigator.pop(context);
+                  onPressed: () async {
+                    final confirmed = await showDialog<bool>(
+                      context: context,
+                      builder: (context) => const LogOutDialogWidget(),
+                    );
+                    if (confirmed == true) {
+                      Navigator.of(context).pop();
+                    }
                   },
                 ),
               ]
