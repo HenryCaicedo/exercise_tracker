@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../segment_screen.dart';
+import '../new_segment_screen.dart';
 
 class SegmentListWidget extends StatelessWidget {
   @override
@@ -80,7 +81,10 @@ class SegmentListWidget extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // not implemented
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NewSegmentScreen()),
+          );
         },
         child: Icon(Icons.add),
       ),

@@ -19,7 +19,7 @@ class LogOutDialogWidget extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop(true);
           },
-          child: const Text('salir'),
+          child: const Text('Salir'),
         ),
       ],
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'ranking_screen.dart';
+import 'tab_widget.dart';
 
 class SegmentScreen extends StatelessWidget {
   @override
