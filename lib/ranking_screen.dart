@@ -60,7 +60,7 @@ class RankingScreen extends StatelessWidget {
                   ],
                 ),
                 title: Text(
-                  'Nombre del segmento',
+                  'Actividad',
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w600,
@@ -70,7 +70,7 @@ class RankingScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Trote: 4 km',
+                      '5 min',
                       style: TextStyle(fontSize: 16.0),
                     ),
                   ],
