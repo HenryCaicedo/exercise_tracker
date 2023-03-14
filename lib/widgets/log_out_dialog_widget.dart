@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../login_screen.dart';
 
 class LogOutDialogWidget extends StatelessWidget {
   const LogOutDialogWidget({Key? key}) : super(key: key);
@@ -17,7 +18,8 @@ class LogOutDialogWidget extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop(true);
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => LoginScreen()));
           },
           child: const Text('Salir'),
         ),
