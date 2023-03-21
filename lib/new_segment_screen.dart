@@ -1,7 +1,87 @@
-import 'package:flutter/material.dart';
-import 'segment_screen.dart';
+import 'dart:math';
 
-class NewSegmentScreen extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'segment_screen.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+class NewSegmentScreen extends StatefulWidget {
+  @override
+  State<NewSegmentScreen> createState() => _NewSegmentScreenState();
+}
+
+class _NewSegmentScreenState extends State<NewSegmentScreen> {
+  late GoogleMapController _mapController;
+  final LatLng fromPoint = LatLng(-38.956176, -67.920666);
+
+  final LatLng toPoint = LatLng(-38.953724, -67.923921);
+
+  final Map<MarkerId, Marker> _marcadores = {};
+
+  _onTap(LatLng position) {
+    setState(() {
+      if (mark.length == 2) {
+        mark.clear();
+      }
+      mark.add(
+        Marker(
+          markerId: MarkerId(mark.length.toString()),
+          position: position,
+          infoWindow: InfoWindow(title: "Punto"),
+        ),
+      );
+      print(mark.length);
+    });
+
+    // final markerId = MarkerId(_marcadores.length.toString());
+    // final marker = Marker(markerId: markerId, position: position);
+    // _marcadores[markerId] = marker;
+    // print(_marcadores.values);
+  }
+
+  var mark = Set<Marker>();
+
+  Set<Marker> _createMarkers() {
+    var tmp = Set<Marker>();
+    tmp.add(
+      Marker(
+        markerId: MarkerId("fromPoint"),
+        position: fromPoint,
+        infoWindow: InfoWindow(title: "Pizzeria"),
+      ),
+    );
+
+    return tmp;
+  }
+
+  void _mapcreated(GoogleMapController controller) {
+    _mapController = controller;
+    _centerView();
+  }
+
+  _centerView() async {
+    await _mapController.getVisibleRegion();
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    var left = min(position.latitude, position.latitude);
+    var right = max(position.latitude, position.latitude);
+    var top = max(position.longitude, position.longitude);
+    var bottom = min(position.longitude, position.longitude);
+
+    var bounds = LatLngBounds(
+      southwest: LatLng(left, bottom),
+      northeast: LatLng(right, top),
+    );
+    var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 40);
+    _mapController.animateCamera(cameraUpdate);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    mark.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,13 +117,15 @@ class NewSegmentScreen extends StatelessWidget {
                     color: Colors.grey[300],
                   ),
                   child: Center(
-                    child: Text(
-                      'Map goes here',
-                      style: TextStyle(
-                        fontSize: 24,
-                      ),
-                    ),
-                  ),
+                      child: GoogleMap(
+                    initialCameraPosition:
+                        CameraPosition(target: LatLng(0, 0), zoom: 10),
+                    markers: mark,
+                    onTap: _onTap,
+                    myLocationButtonEnabled: true,
+                    myLocationEnabled: true,
+                    onMapCreated: _mapcreated,
+                  )),
                 ),
                 ListTile(
                   leading: Icon(Icons.label),

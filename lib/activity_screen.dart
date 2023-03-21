@@ -1,22 +1,95 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'widgets/activity_widget.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
-class ActivityScreen extends StatelessWidget {
+class ActivityScreen extends StatefulWidget {
+  @override
+  State<ActivityScreen> createState() => _ActivityScreenState();
+}
+
+class _ActivityScreenState extends State<ActivityScreen> {
+  late GoogleMapController _mapController;
+  Set<Polyline> newRoute = Set();
+  List<LatLng> points = [];
+  Set<Polyline> polylines = Set();
+  static CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(0, 0),
+    zoom: 18,
+  );
+
+  // final Map<PolylineId,Polyline> _polylines={};
+  // Set<Polyline> get polylines=>_polylines.values.toSet();
+
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
+  Future<Position> getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    return position;
+  }
 
-  static const CameraPosition _kLake = CameraPosition(
-      target: LatLng(10.96854, -74.78132),
-      tilt: 59.440717697143555,
-      zoom: 15.151926040649414);
+  void setPoly(Set<Polyline> p) {}
+
+  void updateposition() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    final newPosition = CameraPosition(
+        target: LatLng(position.latitude, position.longitude), zoom: 20);
+    setState(() {
+      _kGooglePlex = newPosition;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    updateposition();
+    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(
+        locationSettings: LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 25,
+    )).listen((Position? position) {
+      if (position == null) {
+        print('Unknown');
+      } else {
+        print(
+            '${position.latitude.toString()}, ${position.longitude.toString()}');
+        print("----------------------------------------");
+        // LatLng temp = LatLng(position.latitude, position.longitude);
+        // const PolylineId polylineId = PolylineId('group');
+        // late Polyline polyline;
+        // if (_polylines.containsKey(polylineId)) {
+        //   final tmp = _polylines[polylineId]!;
+        //   polyline = tmp.copyWith(
+        //     pointsParam: [...tmp.points, temp],
+        //   );
+        // } else {
+        //   polyline = Polyline(
+        //     polylineId: polylineId,
+        //     points: [temp],
+        //   );
+        // }
+        // _polylines[polylineId] = polyline;
+
+        points.add(LatLng(position.latitude, position.longitude));
+        var line = Polyline(
+          points: points,
+          polylineId: PolylineId("mejor ruta"),
+          color: Colors.red,
+          width: 4,
+        );
+        print(points);
+        newRoute.add(line);
+        setState(() {
+          polylines = newRoute;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,23 +105,36 @@ class ActivityScreen extends StatelessWidget {
           Center(
               child: GoogleMap(
             initialCameraPosition: _kGooglePlex,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-            },
+            myLocationButtonEnabled: true,
+            myLocationEnabled: true,
+            polylines: polylines,
+            onMapCreated: _mapcreated,
           )),
           ActivityWidget(),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: const Text('To the lake!'),
-        icon: const Icon(Icons.directions_boat),
-      ),
     );
   }
 
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+  void _mapcreated(GoogleMapController controller) {
+    _mapController = controller;
+    _centerView();
+  }
+
+  _centerView() async {
+    await _mapController.getVisibleRegion();
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    var left = min(position.latitude, position.latitude);
+    var right = max(position.latitude, position.latitude);
+    var top = max(position.longitude, position.longitude);
+    var bottom = min(position.longitude, position.longitude);
+
+    var bounds = LatLngBounds(
+      southwest: LatLng(left, bottom),
+      northeast: LatLng(right, top),
+    );
+    var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 40);
+    _mapController.animateCamera(cameraUpdate);
   }
 }
