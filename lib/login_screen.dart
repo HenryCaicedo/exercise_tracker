@@ -95,6 +95,7 @@ class LoginScreen extends StatelessWidget {
                     ElevatedButton(
                       child: const Text('Iniciar'),
                       onPressed: () {
+                        requestLocationPermission();
                         if (_usernameController.text == '' &&
                             _passwordController.text == '') {
                           _usernameController.clear();
@@ -114,7 +115,6 @@ class LoginScreen extends StatelessWidget {
                     TextButton(
                       child: const Text('Crear cuenta'),
                       onPressed: () {
-                        requestLocationPermission();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
