@@ -82,6 +82,8 @@ class _NewSegmentScreenState extends State<NewSegmentScreen> {
     mark.clear();
   }
 
+  bool _isPublic = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,6 +165,18 @@ class _NewSegmentScreenState extends State<NewSegmentScreen> {
                   leading: Icon(Icons.timer),
                   title: Text('Tiempo aproximado:'),
                   subtitle: Text('15 min'),
+                ),
+                ListTile(
+                  leading: Icon(Icons.public),
+                  title: Text('Hacer público:'),
+                  trailing: Switch(
+                    value: _isPublic,
+                    onChanged: (value) {
+                      setState(() {
+                        _isPublic = value;
+                      });
+                    },
+                  ),
                 ),
                 SizedBox(height: 16),
                 ElevatedButton(
