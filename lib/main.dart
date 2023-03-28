@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => LoginScreen(),
         '/tabs': (context) => const TabWidget(),
         '/activity': (context) => ActivityScreen(),
+        '/login': (context) => LoginScreen(),
       },
     );
   }

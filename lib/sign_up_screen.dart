@@ -91,7 +91,7 @@ class SignUpScreen extends StatelessWidget {
                           _usernameController.clear();
                           _emailController.clear();
                           _passwordController.clear();
-                          Navigator.pushNamed(context, '/tabs');
+                          Navigator.pushNamed(context, '/login');
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
