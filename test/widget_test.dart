@@ -1,61 +1,56 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:exercise_tracker/main.dart';
-import '../lib/login_screen.dart';
-import '../lib/widgets/log_out_dialog_widget.dart';
+import '../lib/widgets/segment_list_widget.dart';
+import '../lib/segment_screen.dart';
 
 void main() {
-  testWidgets('LogOutDialogWidget displays correctly',
+  testWidgets('SegmentListWidget should show a list of segments',
       (WidgetTester tester) async {
-    try {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: ElevatedButton(
-              onPressed: () async {
-                await showDialog(
-                  context: tester
-                      .element(find.byType(ElevatedButton))
-                      .findAncestorStateOfType<ScaffoldState>()!
-                      .context,
-                  builder: (context) {
-                    return const LogOutDialogWidget();
-                  },
-                );
-              },
-              child: const Text('Show dialog'),
-            ),
-          ),
-        ),
-      );
+    await tester.pumpWidget(MaterialApp(home: SegmentListWidget()));
 
-      // Tap on the "Show dialog" button
-      await tester.tap(find.text('Show dialog'));
-      await tester.pumpAndSettle();
+    // Revisar que se muestre la lista
+    expect(find.byType(ListView), findsOneWidget);
 
-      // Check if the dialog title and content are displayed correctly
-      expect(find.text('Cerrar sesión'), findsOneWidget);
-      expect(
-          find.text('¿Estás seguro de querer cerrar sesión?'), findsOneWidget);
+    // Revisar que se muestren los segmentos
+    expect(find.text('Segmento 1'), findsOneWidget);
+    expect(find.text('Segmento 2'), findsOneWidget);
+    expect(find.text('Segmento 3'), findsOneWidget);
+    expect(find.text('Segmento 4'), findsOneWidget);
+    expect(find.text('Segmento 5'), findsOneWidget);
+    expect(find.text('Segmento 6'), findsOneWidget);
+  });
 
-      // Tap on the "Cancelar" button and check if the dialog is closed
-      await tester.tap(find.text('Cancelar'));
-      await tester.pumpAndSettle();
-      expect(find.text('Cerrar sesión'), findsNothing);
+  testWidgets(
+      'SegmentListWidget should add a new segment when the FAB is tapped',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SegmentListWidget()));
 
-      // Tap on the "Salir" button and check if the dialog is closed and the LoginScreen is displayed
-      await tester.tap(find.text('Salir'));
-      await tester.pumpAndSettle();
-      expect(find.byType(LoginScreen), findsOneWidget);
-    } catch (error) {
-      print(error);
-    }
+    // Tap the FAB to add a new segment
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    // Enter segment information and submit
+    await tester.enterText(find.byType(TextField).at(0), 'New Segment');
+    await tester.enterText(find.byType(TextField).at(1), 'Swimming');
+    await tester.enterText(find.byType(TextField).at(2), '3.7');
+    await tester.tap(find.text('Submit'));
+    await tester.pumpAndSettle();
+
+    // Check that the new segment is shown
+    expect(find.text('New Segment'), findsOneWidget);
+    expect(find.text('Swimming: 3.7 km'), findsOneWidget);
+  });
+
+  testWidgets(
+      'SegmentListWidget should navigate to SegmentScreen when a segment is tapped',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SegmentListWidget()));
+
+    // Tap the first segment in the list
+    await tester.tap(find.text('Segmento 1'));
+    await tester.pumpAndSettle();
+
+    // Check that we're on the SegmentScreen
+    expect(find.byType(SegmentScreen), findsOneWidget);
   });
 }
