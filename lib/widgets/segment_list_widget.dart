@@ -2,17 +2,53 @@ import 'package:flutter/material.dart';
 import '../segment_screen.dart';
 import '../new_segment_screen.dart';
 
-class SegmentListWidget extends StatelessWidget {
+class Segmento {
+  final String name;
+  final String type;
+  final double distance;
+
+  Segmento({
+    required this.name,
+    required this.type,
+    required this.distance,
+  });
+}
+
+class SegmentListWidget extends StatefulWidget {
+  @override
+  _SegmentListWidgetState createState() => _SegmentListWidgetState();
+
+  void addSegment(Segmento segmento) {
+    _SegmentListWidgetState().addSegment(segmento);
+  }
+}
+
+class _SegmentListWidgetState extends State<SegmentListWidget> {
+  List<Segmento> segments = [
+    Segmento(name: 'Segmento 1', type: 'Ciclismo', distance: 10.5),
+    Segmento(name: 'Segmento 2', type: 'Trote', distance: 5.0),
+    Segmento(name: 'Segmento 3', type: 'Ciclismo', distance: 8.2),
+    Segmento(name: 'Segmento 4', type: 'Trote', distance: 2.7),
+    Segmento(name: 'Segmento 5', type: 'Ciclismo', distance: 12.3),
+    Segmento(name: 'Segmento 6', type: 'Ciclismo', distance: 12.2),
+  ];
+
+  void addSegment(Segmento segmento) {
+    setState(() {
+      segments.insert(0, segmento);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: null, // remove the app bar
+      appBar: null,
       body: Padding(
-        padding: const EdgeInsets.all(8.0), // set desired padding
+        padding: const EdgeInsets.all(8.0),
         child: ListView.builder(
-          itemCount: 5,
+          itemCount: segments.length,
           itemBuilder: (BuildContext context, int index) {
-            //RouteData data = _list[index];
+            Segmento segmento = segments[index];
             return Card(
               child: ListTile(
                 onTap: () {
@@ -49,7 +85,7 @@ class SegmentListWidget extends StatelessWidget {
                 title: Row(
                   children: [
                     Text(
-                      'Segmento',
+                      segmento.name,
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w600,
@@ -68,7 +104,7 @@ class SegmentListWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Trote: 4 km',
+                      '${segmento.type}: ${segmento.distance.toString()} km',
                       style: TextStyle(fontSize: 16.0),
                     ),
                   ],
@@ -80,11 +116,14 @@ class SegmentListWidget extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final Segmento? newSegment = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => NewSegmentScreen()),
           );
+          if (newSegment != null) {
+            addSegment(newSegment);
+          }
         },
         child: Icon(Icons.add),
       ),

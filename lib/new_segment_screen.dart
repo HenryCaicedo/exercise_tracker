@@ -1,9 +1,9 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'segment_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'widgets/segment_list_widget.dart';
 
 class NewSegmentScreen extends StatefulWidget {
   @override
@@ -96,99 +96,101 @@ class _NewSegmentScreenState extends State<NewSegmentScreen> {
         ),
         title: Text('Nuevo segmento'),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Card(
-          color: Colors.white,
-          elevation: 8,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(bottom: 16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(16),
-                    ),
-                    color: Colors.grey[300],
-                  ),
-                  child: Center(
-                      child: GoogleMap(
-                    initialCameraPosition:
-                        CameraPosition(target: LatLng(0, 0), zoom: 10),
-                    markers: mark,
-                    onTap: _onTap,
-                    myLocationButtonEnabled: true,
-                    myLocationEnabled: true,
-                    onMapCreated: _mapcreated,
-                  )),
-                ),
-                ListTile(
-                  leading: Icon(Icons.label),
-                  title: TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Nombre del segmento',
-                    ),
-                    onChanged: (value) {},
-                  ),
-                ),
-                ListTile(
-                  leading: Icon(Icons.directions_bike),
-                  title: Text('Tipo de actividad:'),
-                  trailing: DropdownButton<String>(
-                    value: 'cycling',
-                    items: [
-                      DropdownMenuItem<String>(
-                        value: 'cycling',
-                        child: Text('Ciclismo'),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Card(
+            color: Colors.white,
+            elevation: 8,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(16),
                       ),
-                      DropdownMenuItem<String>(
-                        value: 'running',
-                        child: Text('Trote'),
-                      ),
-                    ],
-                    onChanged: (value) {},
+                      color: Colors.grey[300],
+                    ),
+                    child: Center(
+                        child: GoogleMap(
+                      initialCameraPosition:
+                          CameraPosition(target: LatLng(0, 0), zoom: 10),
+                      markers: mark,
+                      onTap: _onTap,
+                      myLocationButtonEnabled: true,
+                      myLocationEnabled: true,
+                      onMapCreated: _mapcreated,
+                    )),
                   ),
-                ),
-                ListTile(
-                  leading: Icon(Icons.place),
-                  title: Text('Distancia:'),
-                  subtitle: Text('1.1 km'),
-                ),
-                ListTile(
-                  leading: Icon(Icons.timer),
-                  title: Text('Tiempo aproximado:'),
-                  subtitle: Text('15 min'),
-                ),
-                ListTile(
-                  leading: Icon(Icons.public),
-                  title: Text('Hacer público:'),
-                  trailing: Switch(
-                    value: _isPublic,
-                    onChanged: (value) {
-                      setState(() {
-                        _isPublic = value;
-                      });
+                  ListTile(
+                    leading: Icon(Icons.label),
+                    title: TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Nombre del segmento',
+                      ),
+                      onChanged: (value) {},
+                    ),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.directions_bike),
+                    title: Text('Tipo de actividad:'),
+                    trailing: DropdownButton<String>(
+                      value: 'cycling',
+                      items: [
+                        DropdownMenuItem<String>(
+                          value: 'cycling',
+                          child: Text('Ciclismo'),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: 'running',
+                          child: Text('Trote'),
+                        ),
+                      ],
+                      onChanged: (value) {},
+                    ),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.place),
+                    title: Text('Distancia:'),
+                    subtitle: Text('1.1 km'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.timer),
+                    title: Text('Tiempo aproximado:'),
+                    subtitle: Text('15 min'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.public),
+                    title: Text('Hacer público:'),
+                    trailing: Switch(
+                      value: _isPublic,
+                      onChanged: (value) {
+                        setState(() {
+                          _isPublic = value;
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    child: Text('Crear'),
+                    onPressed: () {
+                      final Segmento segmento = Segmento(
+                          name: 'Nuevo segmento', type: 'Tipo', distance: 11.2);
+                      Navigator.pop(context,
+                          segmento); // Pass the new segment back to the previous screen
                     },
                   ),
-                ),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  child: Text('Crear'),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SegmentScreen()),
-                    );
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
