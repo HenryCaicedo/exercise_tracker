@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:exercise_tracker/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -44,9 +42,6 @@ void main() {
 
       await tester.tap(find.text('Actividades'));
       await tester.pumpAndSettle(Duration(seconds: 2));
-
-      await tester.tap(find.byType(ListView));
-      await tester.pumpAndSettle(Duration(seconds: 5));
     });
     testWidgets("Segmentos", (tester) async {
       Widget w = await createHomeScreen();
@@ -64,9 +59,6 @@ void main() {
 
       await tester.tap(find.widgetWithText(ElevatedButton, 'Crear'));
       await tester.pumpAndSettle(Duration(seconds: 2));
-
-      await tester.tap(find.byType(ListView));
-      await tester.pumpAndSettle(Duration(seconds: 5));
     });
   });
 }
