@@ -32,6 +32,7 @@ class _SegmentScreenState extends State<SegmentScreen> {
       destination,
       travelMode: TravelMode.driving,
     );
+    
     print(result);
     Set<map.Polyline> newRoute = Set();
 

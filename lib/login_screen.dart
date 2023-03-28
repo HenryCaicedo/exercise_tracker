@@ -6,26 +6,26 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Future<bool> requestLocationPermission() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.deniedForever) {
-      // El usuario ha negado el permiso de ubicación de forma permanente
-      return false;
-    }
+  // Future<bool> requestLocationPermission() async {
+  //   LocationPermission permission = await Geolocator.checkPermission();
+  //   if (permission == LocationPermission.deniedForever) {
+  //     // El usuario ha negado el permiso de ubicación de forma permanente
+  //     return false;
+  //   }
 
-    if (permission == LocationPermission.denied) {
-      // El usuario ha negado el permiso de ubicación
-      permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse &&
-          permission != LocationPermission.always) {
-        // El usuario ha negado el permiso de ubicación nuevamente después de solicitarlo
-        return false;
-      }
-    }
+  //   if (permission == LocationPermission.denied) {
+  //     // El usuario ha negado el permiso de ubicación
+  //     permission = await Geolocator.requestPermission();
+  //     if (permission != LocationPermission.whileInUse &&
+  //         permission != LocationPermission.always) {
+  //       // El usuario ha negado el permiso de ubicación nuevamente después de solicitarlo
+  //       return false;
+  //     }
+  //   }
 
-    // El permiso de ubicación ha sido otorgado
-    return true;
-  }
+  //   // El permiso de ubicación ha sido otorgado
+  //   return true;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +95,7 @@ class LoginScreen extends StatelessWidget {
                     ElevatedButton(
                       child: const Text('Iniciar'),
                       onPressed: () {
-                        requestLocationPermission();
+                        // requestLocationPermission();
                         if (_usernameController.text == '' &&
                             _passwordController.text == '') {
                           _usernameController.clear();
