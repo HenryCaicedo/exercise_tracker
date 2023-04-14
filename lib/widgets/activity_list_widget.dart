@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:exercise_tracker/route_screen.dart';
+import '../lists/activity_list.dart';
 
 class CardListWidget extends StatefulWidget {
   @override
@@ -8,25 +9,6 @@ class CardListWidget extends StatefulWidget {
 }
 
 class _CardListWidgetState extends State<CardListWidget> {
-  List<RouteData> _list = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadData();
-  }
-
-  Future<void> _loadData() async {
-    String jsonString =
-        await DefaultAssetBundle.of(context).loadString('assets/routes.json');
-    List<dynamic> jsonList = json.decode(jsonString);
-    List<RouteData> dataList =
-        jsonList.map((json) => RouteData.fromJson(json)).toList();
-    setState(() {
-      _list = dataList;
-    });
-  }
-
   IconData _getIcon(int type) {
     if (type == 1) {
       return Icons.directions_run;
@@ -42,9 +24,9 @@ class _CardListWidgetState extends State<CardListWidget> {
       body: Padding(
         padding: const EdgeInsets.all(8.0), // set desired padding
         child: ListView.builder(
-          itemCount: _list.length,
+          itemCount: activities.length,
           itemBuilder: (BuildContext context, int index) {
-            RouteData data = _list[index];
+            Activity data = activities[index];
             return Card(
               child: ListTile(
                 onTap: () {
@@ -117,44 +99,6 @@ class _CardListWidgetState extends State<CardListWidget> {
       //   },
       //   child: Icon(Icons.add),
       // ),
-    );
-  }
-}
-
-class RouteData {
-  final String startDate;
-  final String startTime;
-  final String finishDate;
-  final String finishTime;
-  final double distance;
-  final String timeSpent;
-  final int type;
-  final int routeId;
-  final int userId;
-
-  RouteData({
-    required this.startDate,
-    required this.startTime,
-    required this.finishDate,
-    required this.finishTime,
-    required this.distance,
-    required this.timeSpent,
-    required this.type,
-    required this.routeId,
-    required this.userId,
-  });
-
-  factory RouteData.fromJson(Map<String, dynamic> json) {
-    return RouteData(
-      startDate: json['start_date'],
-      startTime: json['start_time'],
-      finishDate: json['finish_date'],
-      finishTime: json['finish_time'],
-      distance: json['distance'].toDouble(),
-      timeSpent: json['time_spent'],
-      type: json['type'],
-      routeId: json['route_id'],
-      userId: json['user_id'],
     );
   }
 }
