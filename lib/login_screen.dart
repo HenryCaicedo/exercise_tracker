@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'sign_up_screen.dart';
 import 'package:geolocator/geolocator.dart';
+import 'lists/user_list.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
@@ -95,13 +96,20 @@ class LoginScreen extends StatelessWidget {
                     ElevatedButton(
                       child: const Text('Iniciar'),
                       onPressed: () {
-                        // requestLocationPermission();
-                        if (_usernameController.text == '' &&
-                            _passwordController.text == '') {
-                          _usernameController.clear();
-                          _passwordController.clear();
-                          Navigator.pushNamed(context, '/tabs');
-                        } else {
+                        String username = _usernameController.text;
+                        String password = _passwordController.text;
+                        bool userFound = false;
+
+                        for (int i = 0; i < users.length; i++) {
+                          if (users[i].username == username &&
+                              users[i].password == password) {
+                            userFound = true;
+                            Navigator.pushNamed(context, '/tabs');
+                            break;
+                          }
+                        }
+
+                        if (!userFound) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
