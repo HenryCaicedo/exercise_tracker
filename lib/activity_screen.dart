@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:google_maps_webservice/directions.dart' as web;
 import 'widgets/activity_widget.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,6 +12,10 @@ class ActivityScreen extends StatefulWidget {
 }
 
 class _ActivityScreenState extends State<ActivityScreen> {
+  Set<Polyline> currentRoute = Set();
+  web.GoogleMapsDirections directionsApi = web.GoogleMapsDirections(
+      apiKey: "AIzaSyAcivqojnFPufHk6fsVDrGTcoQpG_2ufEU");
+
   late GoogleMapController _mapController;
   Set<Polyline> newRoute = Set();
   List<LatLng> points = [];
@@ -44,15 +49,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    updateposition();
+  void rastreo() {
     StreamSubscription<Position> positionStream = Geolocator.getPositionStream(
         locationSettings: LocationSettings(
       accuracy: LocationAccuracy.high,
-      distanceFilter: 25,
-    )).listen((Position? position) {
+      distanceFilter: 40,
+    )).listen((Position? position) async {
       if (position == null) {
         print('Unknown');
       } else {
@@ -75,6 +77,13 @@ class _ActivityScreenState extends State<ActivityScreen> {
         // }
         // _polylines[polylineId] = polyline;
 
+        if (points.isNotEmpty) {
+          var from = points.last;
+          var to = LatLng(position.latitude, position.longitude);
+          var routePoints = await findDirections(from, to);
+          points.addAll(routePoints);
+        }
+
         points.add(LatLng(position.latitude, position.longitude));
         var line = Polyline(
           points: points,
@@ -89,6 +98,14 @@ class _ActivityScreenState extends State<ActivityScreen> {
         });
       }
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    updateposition();
+    points = [];
+    rastreo();
   }
 
   @override
@@ -136,5 +153,32 @@ class _ActivityScreenState extends State<ActivityScreen> {
     );
     var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 40);
     _mapController.animateCamera(cameraUpdate);
+  }
+
+  Future<List<LatLng>> findDirections(LatLng from, LatLng to) async {
+    var origin = web.Location(lat: from.latitude, lng: from.longitude);
+    var destination = web.Location(lat: to.latitude, lng: to.longitude);
+
+    var result = await directionsApi.directionsWithLocation(
+      origin,
+      destination,
+      travelMode: web.TravelMode.walking,
+    );
+
+    List<LatLng> points = [];
+
+    if (result.isOkay) {
+      var route = result.routes[0];
+      var leg = route.legs[0];
+
+      leg.steps.forEach((step) {
+        points.add(LatLng(step.startLocation.lat, step.startLocation.lng));
+        points.add(LatLng(step.endLocation.lat, step.endLocation.lng));
+      });
+    } else {
+      print("ERRROR !!! ${result.status}");
+    }
+
+    return points;
   }
 }
