@@ -34,7 +34,7 @@ List<Activity> activities = [
     timeSpent: "01:12",
     type: 2,
     routeId: 1,
-    userId: 12345,
+    userId: 1,
   ),
   Activity(
     startDate: "15/07",
@@ -45,7 +45,7 @@ List<Activity> activities = [
     timeSpent: "01:15",
     type: 1,
     routeId: 2,
-    userId: 67890,
+    userId: 1,
   ),
   Activity(
     startDate: "16/07",
@@ -56,7 +56,7 @@ List<Activity> activities = [
     timeSpent: "01:10",
     type: 1,
     routeId: 3,
-    userId: 23456,
+    userId: 1,
   ),
   Activity(
     startDate: "16/07",
@@ -67,6 +67,10 @@ List<Activity> activities = [
     timeSpent: "01:10",
     type: 2,
     routeId: 3,
-    userId: 23456,
+    userId: 2,
   ),
 ];
+
+void addActivity(Activity activity) {
+  activities.insert(0, activity);
+}
