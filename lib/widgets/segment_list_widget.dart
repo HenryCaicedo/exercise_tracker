@@ -1,44 +1,14 @@
 import 'package:flutter/material.dart';
 import '../segment_screen.dart';
 import '../new_segment_screen.dart';
-
-class Segmento {
-  final String name;
-  final String type;
-  final double distance;
-
-  Segmento({
-    required this.name,
-    required this.type,
-    required this.distance,
-  });
-}
+import '../lists/segment_list.dart';
 
 class SegmentListWidget extends StatefulWidget {
   @override
   _SegmentListWidgetState createState() => _SegmentListWidgetState();
-
-  void addSegment(Segmento segmento) {
-    _SegmentListWidgetState().addSegment(segmento);
-  }
 }
 
 class _SegmentListWidgetState extends State<SegmentListWidget> {
-  List<Segmento> segments = [
-    Segmento(name: 'Segmento 1', type: 'Ciclismo', distance: 10.5),
-    Segmento(name: 'Segmento 2', type: 'Trote', distance: 5.0),
-    Segmento(name: 'Segmento 3', type: 'Ciclismo', distance: 8.2),
-    Segmento(name: 'Segmento 4', type: 'Trote', distance: 2.7),
-    Segmento(name: 'Segmento 5', type: 'Ciclismo', distance: 12.3),
-    Segmento(name: 'Segmento 6', type: 'Ciclismo', distance: 12.2),
-  ];
-
-  void addSegment(Segmento segmento) {
-    setState(() {
-      segments.insert(0, segmento);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,14 +86,11 @@ class _SegmentListWidgetState extends State<SegmentListWidget> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final Segmento? newSegment = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => NewSegmentScreen()),
-          );
-          if (newSegment != null) {
-            addSegment(newSegment);
-          }
+        onPressed: () {
+          addSegment(
+              Segmento(name: 'Segmento 8', type: 'Trote', distance: 3.4));
+          print(segments.length);
+          setState(() {});
         },
         child: Icon(Icons.add),
       ),

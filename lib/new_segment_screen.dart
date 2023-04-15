@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'segment_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'widgets/segment_list_widget.dart';
+import 'lists/segment_list.dart';
 
 class NewSegmentScreen extends StatefulWidget {
   @override
@@ -182,12 +183,7 @@ class _NewSegmentScreenState extends State<NewSegmentScreen> {
                   SizedBox(height: 16),
                   ElevatedButton(
                     child: Text('Crear'),
-                    onPressed: () {
-                      final Segmento segmento = Segmento(
-                          name: 'Nuevo segmento', type: 'Tipo', distance: 11.2);
-                      Navigator.pop(context,
-                          segmento); // Pass the new segment back to the previous screen
-                    },
+                    onPressed: () {},
                   ),
                 ],
               ),

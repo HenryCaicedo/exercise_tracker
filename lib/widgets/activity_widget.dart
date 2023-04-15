@@ -1,6 +1,7 @@
 import 'dart:async';
-
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import '../lists/activity_list.dart';
 
 class ActivityWidget extends StatefulWidget {
   @override
@@ -8,9 +9,12 @@ class ActivityWidget extends StatefulWidget {
 }
 
 class _ActivityWidgetState extends State<ActivityWidget> {
-  bool _isPaused = false;
+  bool _isPaused = true;
   int _elapsedSeconds = 0;
   Timer? _timer;
+  var inicio = '11:30';
+  var fin = '13:23';
+  var startDateTime;
 
   @override
   void dispose() {
@@ -25,6 +29,11 @@ class _ActivityWidgetState extends State<ActivityWidget> {
         _elapsedSeconds++;
       });
     });
+
+    // Save the start datetime only if it is null
+    if (startDateTime == null) {
+      startDateTime = DateTime.now();
+    }
   }
 
   void _pauseTimer() {
@@ -40,6 +49,27 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   void _stopTimer() {
     _timer?.cancel();
     _isPaused = false;
+
+    // Create a new Activity object with dummy data
+    DateTime finishDateTime = DateTime.now();
+
+    Activity newActivity = Activity(
+      startDate: DateFormat('dd/MM').format(startDateTime),
+      startTime: DateFormat('HH:mm').format(startDateTime),
+      finishDate: DateFormat('dd/MM').format(finishDateTime),
+      finishTime: DateFormat('HH:mm').format(startDateTime),
+      distance: 0,
+      timeSpent:
+          '${(_elapsedSeconds ~/ 3600).toString().padLeft(2, '0')}:${((_elapsedSeconds % 3600) ~/ 60).toString().padLeft(2, '0')}:${(_elapsedSeconds % 60).toString().padLeft(2, '0')}',
+      type: 1,
+      routeId: 0,
+      userId: 1,
+    );
+
+    // Add the new activity to the list
+    addActivity(newActivity);
+
+    // Reset the elapsed seconds
     _elapsedSeconds = 0;
   }
 
@@ -76,7 +106,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      _isPaused ? '$_elapsedSeconds segundos' : '00:00:$_elapsedSeconds',
+                      '${(_elapsedSeconds ~/ 3600).toString().padLeft(2, '0')}:${((_elapsedSeconds % 3600) ~/ 60).toString().padLeft(2, '0')}:${(_elapsedSeconds % 60).toString().padLeft(2, '0')}',
                       style: TextStyle(fontSize: 16),
                     ),
                     SizedBox(height: 16),
@@ -99,7 +129,8 @@ class _ActivityWidgetState extends State<ActivityWidget> {
               Column(
                 children: [
                   IconButton(
-                    icon: _isPaused ? Icon(Icons.play_arrow) : Icon(Icons.pause),
+                    icon:
+                        _isPaused ? Icon(Icons.play_arrow) : Icon(Icons.pause),
                     onPressed: () {
                       setState(() {
                         _isPaused = !_isPaused;
