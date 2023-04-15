@@ -9,6 +9,11 @@ import 'package:geolocator/geolocator.dart';
 class ActivityScreen extends StatefulWidget {
   @override
   State<ActivityScreen> createState() => _ActivityScreenState();
+
+  final int activityType;
+
+  const ActivityScreen({Key? key, required this.activityType})
+      : super(key: key);
 }
 
 class _ActivityScreenState extends State<ActivityScreen> {
@@ -127,7 +132,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
             polylines: polylines,
             onMapCreated: _mapcreated,
           )),
-          ActivityWidget(),
+          ActivityWidget(activityType: widget.activityType),
         ],
       ),
     );

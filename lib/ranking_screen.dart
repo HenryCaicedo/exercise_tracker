@@ -15,36 +15,7 @@ class RankingScreen extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             return Card(
               child: ListTile(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => RouteScreen(),
-                      transitionDuration: Duration(milliseconds: 300),
-                      transitionsBuilder: (_, animation, __, child) {
-                        return SlideTransition(
-                          position: Tween<Offset>(
-                            begin: Offset(1.0, 0.0),
-                            end: Offset.zero,
-                          ).animate(animation),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: child,
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
+                onTap: () {},
                 leading: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

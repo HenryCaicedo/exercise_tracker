@@ -110,8 +110,9 @@ class _HomeTabState extends State<HomeTab> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                ActivityScreen()),
+                                          builder: (context) =>
+                                              ActivityScreen(activityType: 2),
+                                        ),
                                       );
                                     },
                                     icon: Icon(Icons.directions_bike),
@@ -128,8 +129,9 @@ class _HomeTabState extends State<HomeTab> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                ActivityScreen()),
+                                          builder: (context) =>
+                                              ActivityScreen(activityType: 1),
+                                        ),
                                       );
                                     },
                                     icon: Icon(Icons.directions_run),

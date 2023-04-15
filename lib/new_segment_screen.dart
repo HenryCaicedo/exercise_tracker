@@ -5,6 +5,7 @@ import 'segment_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'widgets/segment_list_widget.dart';
 import 'lists/segment_list.dart';
+import 'tab_widget.dart';
 
 class NewSegmentScreen extends StatefulWidget {
   @override
@@ -183,7 +184,19 @@ class _NewSegmentScreenState extends State<NewSegmentScreen> {
                   SizedBox(height: 16),
                   ElevatedButton(
                     child: Text('Crear'),
-                    onPressed: () {},
+                    onPressed: () {
+                      addSegment(Segmento(
+                          id: '1',
+                          userId: '1',
+                          name: 'Segmento 1',
+                          type: 'Ciclismo',
+                          distance: 10.5));
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TabWidget(initialIndex: 2)),
+                      );
+                    },
                   ),
                 ],
               ),

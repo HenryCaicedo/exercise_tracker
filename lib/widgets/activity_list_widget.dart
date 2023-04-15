@@ -33,7 +33,7 @@ class _CardListWidgetState extends State<CardListWidget> {
                   Navigator.push(
                     context,
                     PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => RouteScreen(),
+                      pageBuilder: (_, __, ___) => RouteScreen(data: data),
                       transitionDuration: Duration(milliseconds: 300),
                       transitionsBuilder: (_, animation, __, child) {
                         return SlideTransition(

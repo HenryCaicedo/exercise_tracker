@@ -87,10 +87,12 @@ class _SegmentListWidgetState extends State<SegmentListWidget> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          addSegment(
-              Segmento(name: 'Segmento 8', type: 'Trote', distance: 3.4));
-          print(segments.length);
-          setState(() {});
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NewSegmentScreen(),
+            ),
+          );
         },
         child: Icon(Icons.add),
       ),

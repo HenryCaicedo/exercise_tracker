@@ -24,7 +24,9 @@ class MyApp extends StatelessWidget {
 }
 
 class TabWidget extends StatefulWidget {
-  const TabWidget({Key? key}) : super(key: key);
+  final int initialIndex;
+
+  const TabWidget({Key? key, this.initialIndex = 0}) : super(key: key);
 
   @override
   _TabWidgetState createState() => _TabWidgetState();
@@ -43,7 +45,13 @@ class _TabWidgetState extends State<TabWidget> {
     'Segmentos',
   ];
 
-  int _currentIndex = 0;
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex;
+  }
 
   @override
   Widget build(BuildContext context) {

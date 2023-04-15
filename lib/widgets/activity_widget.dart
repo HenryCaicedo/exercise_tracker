@@ -2,8 +2,13 @@ import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import '../lists/activity_list.dart';
+import '../tab_widget.dart';
 
 class ActivityWidget extends StatefulWidget {
+  final int activityType; // define the parameter as a final field
+
+  ActivityWidget({required this.activityType}); // add a constructor
+
   @override
   _ActivityWidgetState createState() => _ActivityWidgetState();
 }
@@ -15,6 +20,14 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   var inicio = '11:30';
   var fin = '13:23';
   var startDateTime;
+
+  IconData _getIcon(int type) {
+    if (type == 1) {
+      return Icons.directions_run;
+    } else {
+      return Icons.directions_bike;
+    }
+  }
 
   @override
   void dispose() {
@@ -57,12 +70,12 @@ class _ActivityWidgetState extends State<ActivityWidget> {
       startDate: DateFormat('dd/MM').format(startDateTime),
       startTime: DateFormat('HH:mm').format(startDateTime),
       finishDate: DateFormat('dd/MM').format(finishDateTime),
-      finishTime: DateFormat('HH:mm').format(startDateTime),
+      finishTime: DateFormat('HH:mm').format(finishDateTime),
       distance: 0,
       timeSpent:
           '${(_elapsedSeconds ~/ 3600).toString().padLeft(2, '0')}:${((_elapsedSeconds % 3600) ~/ 60).toString().padLeft(2, '0')}:${(_elapsedSeconds % 60).toString().padLeft(2, '0')}',
-      type: 1,
-      routeId: 0,
+      type: widget.activityType,
+      routeId: activities.length + 1,
       userId: 1,
     );
 
@@ -71,6 +84,11 @@ class _ActivityWidgetState extends State<ActivityWidget> {
 
     // Reset the elapsed seconds
     _elapsedSeconds = 0;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TabWidget(initialIndex: 1)),
+    );
   }
 
   @override
@@ -89,7 +107,7 @@ class _ActivityWidgetState extends State<ActivityWidget> {
           child: Row(
             children: [
               Icon(
-                Icons.directions_run,
+                _getIcon(widget.activityType),
                 size: 35,
               ),
               SizedBox(width: 16),

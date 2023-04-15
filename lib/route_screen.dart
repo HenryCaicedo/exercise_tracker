@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'lists/activity_list.dart';
 
 class RouteScreen extends StatelessWidget {
+  final Activity data;
+
+  const RouteScreen({Key? key, required this.data}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,17 +58,17 @@ class RouteScreen extends StatelessWidget {
                 ListTile(
                   leading: Icon(Icons.directions_walk),
                   title: Text('Distancia:'),
-                  subtitle: Text('1.1 km'),
+                  subtitle: Text('${data.distance.toStringAsFixed(1)} km'),
                 ),
                 ListTile(
                   leading: Icon(Icons.access_time),
                   title: Text('Duración total:'),
-                  subtitle: Text('15 min'),
+                  subtitle: Text('${data.timeSpent}'),
                 ),
                 ListTile(
                   leading: Icon(Icons.timelapse),
                   title: Text('Inicio-Fin:'),
-                  subtitle: Text('07:21 AM - 07:36 AM'),
+                  subtitle: Text('${data.startTime} - ${data.finishTime}'),
                 ),
               ],
             ),
