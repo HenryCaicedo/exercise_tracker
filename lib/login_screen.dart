@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'sign_up_screen.dart';
 import 'package:geolocator/geolocator.dart';
 import 'lists/user_list.dart';
+import 'data/database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
@@ -97,27 +99,28 @@ class LoginScreen extends StatelessWidget {
                       child: const Text('Iniciar'),
                       onPressed: () {
                         requestLocationPermission();
-                        String username = _usernameController.text;
-                        String password = _passwordController.text;
-                        bool userFound = false;
+                        // String username = _usernameController.text;
+                        // String password = _passwordController.text;
+                        // bool userFound = false;
 
-                        for (int i = 0; i < users.length; i++) {
-                          if (users[i].username == username &&
-                              users[i].password == password) {
-                            userFound = true;
-                            Navigator.pushNamed(context, '/tabs');
-                            break;
-                          }
-                        }
+                        // for (int i = 0; i < users.length; i++) {
+                        //   if (users[i].username == username &&
+                        //       users[i].password == password) {
+                        //     userFound = true;
+                        //     Navigator.pushNamed(context, '/tabs');
+                        //     break;
+                        //   }
+                        // }
 
-                        if (!userFound) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                  'Invalid credentials. Please try again.'),
-                            ),
-                          );
-                        }
+                        // if (!userFound) {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     const SnackBar(
+                        //       content: Text(
+                        //           'Invalid credentials. Please try again.'),
+                        //     ),
+                        //   );
+                        // }
+                        _login(context);
                       },
                     ),
                     const SizedBox(height: 20),
@@ -140,5 +143,26 @@ class LoginScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _login(BuildContext context) async {
+    final String username = _usernameController.text;
+    final String password = _passwordController.text;
+    final bool confirmation =
+        await DatabaseHelper.instance.userExists(username, password);
+
+    if (confirmation) {
+      final int userId =
+          await DatabaseHelper.instance.getUserId(username, password);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('userId', userId);
+      Navigator.pushNamed(context, '/tabs');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Invalid credentials. Please try again.'),
+        ),
+      );
+    }
   }
 }

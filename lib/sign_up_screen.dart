@@ -1,10 +1,46 @@
 import 'package:flutter/material.dart';
+import 'data/database.dart';
 import 'lists/user_list.dart';
 
 class SignUpScreen extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> _createUser(BuildContext context) async {
+    if (_usernameController.text.isNotEmpty &&
+        _emailController.text.isNotEmpty &&
+        _passwordController.text.isNotEmpty) {
+      final username = _usernameController.text;
+      final email = _emailController.text;
+      final password = _passwordController.text;
+      if (!await DatabaseHelper.instance.userExists(username, password)) {
+        await DatabaseHelper.instance.createUser(
+          username: username,
+          email: email,
+          password: password,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('usuario creado'),
+          ),
+        );
+        Navigator.pushNamed(context, '/login');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Este usuario ya existe'),
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Invalid credentials. Please try again.'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,26 +124,7 @@ class SignUpScreen extends StatelessWidget {
                         ElevatedButton(
                           child: const Text('Create'),
                           onPressed: () {
-                            if (_usernameController.text.isNotEmpty &&
-                                _emailController.text.isNotEmpty &&
-                                _passwordController.text.isNotEmpty) {
-                              User newUser = User(
-                                username: _usernameController.text,
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                                name: '',
-                                id: users.length + 1,
-                              );
-                              addUser(newUser);
-                              Navigator.pushNamed(context, '/login');
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      'Invalid credentials. Please try again.'),
-                                ),
-                              );
-                            }
+                            _createUser(context);
                           },
                         ),
                       ],

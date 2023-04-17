@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../lists/activity_list.dart';
 import '../tab_widget.dart';
+import 'package:exercise_tracker/data/database.dart';
+import 'package:exercise_tracker/activity_screen.dart' as act;
+import 'package:geolocator/geolocator.dart';
 
 class ActivityWidget extends StatefulWidget {
   final int activityType; // define the parameter as a final field
@@ -59,31 +63,55 @@ class _ActivityWidgetState extends State<ActivityWidget> {
     _startTimer();
   }
 
-  void _stopTimer() {
+  void _stopTimer() async {
     _timer?.cancel();
     _isPaused = false;
 
-    // Create a new Activity object with dummy data
-    DateTime finishDateTime = DateTime.now();
+    // // Create a new Activity object with dummy data
+    // DateTime finishDateTime = DateTime.now();
 
-    Activity newActivity = Activity(
-      startDate: DateFormat('dd/MM').format(startDateTime),
-      startTime: DateFormat('HH:mm').format(startDateTime),
-      finishDate: DateFormat('dd/MM').format(finishDateTime),
-      finishTime: DateFormat('HH:mm').format(finishDateTime),
-      distance: 0,
-      timeSpent:
-          '${(_elapsedSeconds ~/ 3600).toString().padLeft(2, '0')}:${((_elapsedSeconds % 3600) ~/ 60).toString().padLeft(2, '0')}:${(_elapsedSeconds % 60).toString().padLeft(2, '0')}',
-      type: widget.activityType,
-      routeId: activities.length + 1,
-      userId: 1,
+    // Activity newActivity = Activity(
+    //   startDate: DateFormat('dd/MM').format(startDateTime),
+    //   startTime: DateFormat('HH:mm').format(startDateTime),
+    //   finishDate: DateFormat('dd/MM').format(finishDateTime),
+    //   finishTime: DateFormat('HH:mm').format(finishDateTime),
+    //   distance: 0,
+    //   timeSpent:
+    //       '${(_elapsedSeconds ~/ 3600).toString().padLeft(2, '0')}:${((_elapsedSeconds % 3600) ~/ 60).toString().padLeft(2, '0')}:${(_elapsedSeconds % 60).toString().padLeft(2, '0')}',
+    //   type: widget.activityType,
+    //   routeId: activities.length + 1,
+    //   userId: 1,
+    // );
+
+    // // Add the new activity to the list
+    // addActivity(newActivity);
+    final prefs = await SharedPreferences.getInstance();
+    final idUsuario = prefs.getInt('userId') ?? -1;
+    final tipo = prefs.getInt('tipo') ?? -1;
+    String tipoActividad;
+
+    if (tipo == 0) {
+      tipoActividad = 'trote';
+    } else {
+      tipoActividad = 'ciclismo';
+    }
+
+    await DatabaseHelper.instance.createRecorrido(
+        idUsuario,
+        act.ActivityScreen.getDistancia(),
+        tipoActividad,
+        _elapsedSeconds,
+        act.ActivityScreen.getPuntos());
+    cleartipo();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('actividad guardada'),
+      ),
     );
-
-    // Add the new activity to the list
-    addActivity(newActivity);
 
     // Reset the elapsed seconds
     _elapsedSeconds = 0;
+    act.ActivityScreen.closeGeo();
 
     Navigator.push(
       context,
@@ -176,5 +204,10 @@ class _ActivityWidgetState extends State<ActivityWidget> {
         ),
       ),
     );
+  }
+
+  Future<void> cleartipo() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('tipo');
   }
 }

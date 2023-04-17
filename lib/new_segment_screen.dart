@@ -1,11 +1,13 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'segment_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'widgets/segment_list_widget.dart';
 import 'lists/segment_list.dart';
 import 'tab_widget.dart';
+import 'package:exercise_tracker/data/database.dart';
 
 class NewSegmentScreen extends StatefulWidget {
   @override
@@ -13,6 +15,8 @@ class NewSegmentScreen extends StatefulWidget {
 }
 
 class _NewSegmentScreenState extends State<NewSegmentScreen> {
+  String _selectedActivity = 'trote';
+  final TextEditingController _nameController = TextEditingController();
   late GoogleMapController _mapController;
   final LatLng fromPoint = LatLng(-38.956176, -67.920666);
 
@@ -135,6 +139,7 @@ class _NewSegmentScreenState extends State<NewSegmentScreen> {
                   ListTile(
                     leading: Icon(Icons.label),
                     title: TextField(
+                      controller: _nameController,
                       decoration: InputDecoration(
                         labelText: 'Nombre del segmento',
                       ),
@@ -145,18 +150,22 @@ class _NewSegmentScreenState extends State<NewSegmentScreen> {
                     leading: Icon(Icons.directions_bike),
                     title: Text('Tipo de actividad:'),
                     trailing: DropdownButton<String>(
-                      value: 'cycling',
+                      value: 'ciclismo',
                       items: [
                         DropdownMenuItem<String>(
-                          value: 'cycling',
+                          value: 'ciclismo',
                           child: Text('Ciclismo'),
                         ),
                         DropdownMenuItem<String>(
-                          value: 'running',
+                          value: 'trote',
                           child: Text('Trote'),
                         ),
                       ],
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedActivity = value!;
+                        });
+                      },
                     ),
                   ),
                   ListTile(
@@ -185,17 +194,34 @@ class _NewSegmentScreenState extends State<NewSegmentScreen> {
                   ElevatedButton(
                     child: Text('Crear'),
                     onPressed: () {
+                      if (mark.length == 2) {
+                        crearSegmento(
+                            _isPublic,
+                            _nameController.text,
+                            _selectedActivity,
+                            0.0, //distancia
+                            0, //tiempo
+                            obtenerInicio(mark),
+                            obtenerFin(mark));
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TabWidget(initialIndex: 2)),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('introduzca 2 puntos validos'),
+                          ),
+                        );
+                      }
+
                       addSegment(Segmento(
                           id: '1',
                           userId: '1',
                           name: 'Segmento 1',
                           type: 'Ciclismo',
                           distance: 10.5));
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TabWidget(initialIndex: 2)),
-                      );
                     },
                   ),
                 ],
@@ -205,5 +231,42 @@ class _NewSegmentScreenState extends State<NewSegmentScreen> {
         ),
       ),
     );
+  }
+
+  void crearSegmento(
+      bool publico,
+      String nombre,
+      String tipoActividad,
+      double distancia,
+      int tiempo,
+      String puntoInicio,
+      String puntoFinal) async {
+    int privacidad;
+    if (publico) {
+      privacidad = 1;
+    } else {
+      privacidad = 0;
+    }
+    final prefs = await SharedPreferences.getInstance();
+    final idUsuario = prefs.getInt('userId') ?? -1;
+
+    await DatabaseHelper.instance.createSegment(idUsuario, privacidad, nombre,
+        tipoActividad, distancia, tiempo, puntoInicio, puntoFinal);
+  }
+
+  String obtenerInicio(Set<Marker> markers) {
+    if (markers.isEmpty) {
+      return '';
+    }
+    LatLng inicio = markers.first.position;
+    return '${inicio.latitude.toStringAsFixed(6)},${inicio.longitude.toStringAsFixed(6)}';
+  }
+
+  String obtenerFin(Set<Marker> markers) {
+    if (markers.isEmpty) {
+      return '';
+    }
+    LatLng fin = markers.last.position;
+    return '${fin.latitude.toStringAsFixed(6)},${fin.longitude.toStringAsFixed(6)}';
   }
 }

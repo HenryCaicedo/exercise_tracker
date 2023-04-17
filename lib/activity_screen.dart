@@ -14,9 +14,22 @@ class ActivityScreen extends StatefulWidget {
 
   const ActivityScreen({Key? key, required this.activityType})
       : super(key: key);
+
+  static List<LatLng> getPuntos() {
+    return _ActivityScreenState.getpoint();
+  }
+
+  static double getDistancia() {
+    return _ActivityScreenState.getDistance();
+  }
+
+  static void closeGeo() {
+    _ActivityScreenState.positionStream?.cancel();
+  }
 }
 
 class _ActivityScreenState extends State<ActivityScreen> {
+  static StreamSubscription<Position>? positionStream;
   Set<Polyline> currentRoute = Set();
   web.GoogleMapsDirections directionsApi = web.GoogleMapsDirections(
       apiKey: "AIzaSyAcivqojnFPufHk6fsVDrGTcoQpG_2ufEU");
@@ -24,7 +37,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
   late GoogleMapController _mapController;
   Set<Polyline> newRoute = Set();
   List<LatLng> points = [];
-  Set<Polyline> polylines = Set();
+  static Set<Polyline> polylines = Set();
   static CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(0, 0),
     zoom: 18,
@@ -54,11 +67,15 @@ class _ActivityScreenState extends State<ActivityScreen> {
     });
   }
 
+  void stopListening() {
+    positionStream?.cancel();
+  }
+
   void rastreo() {
-    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(
+    positionStream = Geolocator.getPositionStream(
         locationSettings: LocationSettings(
       accuracy: LocationAccuracy.high,
-      distanceFilter: 40,
+      distanceFilter: 20,
     )).listen((Position? position) async {
       if (position == null) {
         print('Unknown');
@@ -107,9 +124,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
 
   @override
   void initState() {
+    stopListening();
     super.initState();
     updateposition();
     points = [];
+    polylines.removeAll;
+    newRoute.removeAll;
     rastreo();
   }
 
@@ -185,5 +205,17 @@ class _ActivityScreenState extends State<ActivityScreen> {
     }
 
     return points;
+  }
+
+  static List<LatLng> getpoint() {
+    List<LatLng> latLngs = [];
+    for (Polyline polyline in polylines) {
+      latLngs.addAll(polyline.points);
+    }
+    return latLngs;
+  }
+
+  static double getDistance() {
+    return 0;
   }
 }

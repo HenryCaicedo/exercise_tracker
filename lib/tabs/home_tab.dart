@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../activity_screen.dart';
 
 void main() {
@@ -107,6 +108,7 @@ class _HomeTabState extends State<HomeTab> {
                                       horizontal: 8.0),
                                   child: ElevatedButton.icon(
                                     onPressed: () {
+                                      guardarTipo(0);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -126,6 +128,7 @@ class _HomeTabState extends State<HomeTab> {
                                       horizontal: 8.0),
                                   child: ElevatedButton.icon(
                                     onPressed: () {
+                                      guardarTipo(1);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -152,5 +155,10 @@ class _HomeTabState extends State<HomeTab> {
         ),
       ),
     );
+  }
+
+  void guardarTipo(int tipo) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('tipo', tipo);
   }
 }
